@@ -1,4 +1,5 @@
 !["Docker Pulls](https://img.shields.io/docker/pulls/hakdogan/pipeline.svg)
+[![Analytics](https://ga-beacon.appspot.com/UA-110069051-1/pipeline/readme)](https://github.com/igrigorik/ga-beacon)
 
 Pipeline
 ===================
