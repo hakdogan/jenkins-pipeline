@@ -72,7 +72,7 @@ f5bed5ba3266        pipeline_sonarqube   "./bin/run.sh"           About a minute
 ```
 
 ## GitHub configuration
-We'll define a service on Github to call the ``Jenkins Github`` webhook because we want to trigger the pipeline we will define whenever a push is made to our repository. To do this go to **Settings -> integrations & Services.** The ``Jenkins Github plugin`` should be shown on the list of available services as below.
+We'll define a service on Github to call the ``Jenkins Github`` webhook because we want to trigger the pipeline we will define whenever a push is made to our repository. To do this go to _Settings -> integrations & Services_. The ``Jenkins Github plugin`` should be shown on the list of available services as below.
 
 ![](images/001.png)
 

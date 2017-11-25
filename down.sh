@@ -1,3 +1,3 @@
 #!/usr/bin/env bash
 docker-compose -f docker-compose.yml down
-docker stop pipeline
+docker stop jenkins-pipeline
