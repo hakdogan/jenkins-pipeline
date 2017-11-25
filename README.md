@@ -16,9 +16,9 @@ That processes we want to auto-manage
 
 ## First step, run up containers
 
-Since one of the goals is to obtain the ``sonarqube`` report of our project, we should be able to access sonarqube from dockerize jenkins. For this reason, we will use ``docker compose`.
+Since one of the goals is to obtain the ``sonarqube`` report of our project, we should be able to access sonarqube from dockerize jenkins. For this reason, we will use ``docker compose``.
 
-`docker-compose.yml``
+``docker-compose.yml``
 ```yml
 version: '3.2'
 services:
@@ -82,7 +82,7 @@ After this, we should be define our access URL of dockerize Jenkins container as
 
 The next step is that create an ``SSH key`` for Jenkins user and define it as a ``Deploy keys`` on our GitHub repository.
 
-![](image:images/003.png)
+![](images/003.png)
 
 When the steps are taken correctly, the following connection request should return a result like this.
 ```
