@@ -1,4 +1,4 @@
-!["Docker Pulls](https://img.shields.io/docker/pulls/hakdogan/pipeline.svg)
+!["Docker Pulls](https://img.shields.io/docker/pulls/hakdogan/jenkins-pipeline.svg)
 [![Analytics](https://ga-beacon.appspot.com/UA-110069051-1/pipeline/readme)](https://github.com/igrigorik/ga-beacon)
 
 # A tutorial about Continuous Integration and Continuous Delivery by Dockerize Jenkins Pipeline
@@ -74,11 +74,11 @@ f5bed5ba3266        pipeline_sonarqube   "./bin/run.sh"           About a minute
 ## GitHub configuration
 We'll define a service on Github to call the ``Jenkins Github`` webhook because we want to trigger the pipeline we will define whenever a push is made to our repository. To do this go to **Settings -> integrations & Services.** The ``Jenkins Github plugin`` should be shown on the list of available services as below.
 
-![](image:images/001.png)
+![](images/001.png)
 
 After this, we should be define our access URL of dockerize Jenkins container as **Jenkins URL** by adding ``/github-webhook/`` and add a new service.
 
-![](image:images/002.png)
+![](images/002.png)
 
 The next step is that create an ``SSH key`` for Jenkins user and define it as a ``Deploy keys`` on our GitHub repository.
 
@@ -96,7 +96,7 @@ Connection to github.com closed.
 
 We have configured Jenkins int the docker compose file to run on 8080 HTTP port therefore if we visit http://localhost:8080 we will be greeted by a screen like this.
 
-![](image:images/004.png)
+![](images/004.png)
 
 We need the admin password to proceed to installation. It's stored ``/var/jenkins_home/secrets/initialAdminPassword`` directory and also written as output on the console when Jenkins run up.
 
@@ -122,11 +122,11 @@ docker exec -it jenkins sh
 
 After entering the password, we will be download recommended plugins and define ``admin user``.
 
-![](image:images/005.png)
+![](images/005.png)
 
-![](image:images/006.png)
+![](images/006.png)
 
-![](image:images/007.png)
+![](images/007.png)
 
 After clicking **Save and Finish** and **Start using Jenkins** buttons, we should be seeing the Jenkins homepage. One of the seven goals listed above is that we should be docker image building in dockerize Jenkins. Please look at the volume definitions for Jenkins in the compose file.
 ```
@@ -135,28 +135,30 @@ After clicking **Save and Finish** and **Start using Jenkins** buttons, we shoul
 
 The purpose here is to communicate between the ``Docker Daemon`` and the ``Docker Client``(_we will install it on the Jenkins_) over the socket. Like the docker client, we also need ``Maven`` to compile the application to be checked out. For the installation of these tools, we need to perform ``Maven`` and ``Docker Client`` installs under _Manage Jenkins -> Global Tool Configuration_ menu.
 
-![](image:images/008.png)
+![](images/008.png)
 
 We added Maven and Docker installer and checked ``Install automatically`` checkbox. These tools are installed by Jenkins when our script(_Jenkins file_) first runs. We give ``myMaven`` and ``myDocker`` names to the tools. We will access these tools with this names in the script file.
 
 Since we will perform some operations such as ``checkout`` and ``push image to Docker Hub`` on the script file, We need to define the ``Docker Hub Credentials`` and if _we are using a **private repo**, in addition, we must define ``Github credentials``.
 These definitions are performed under _Jenkins Home Page -> Credentials -> Global credentials (unrestricted) -> Add Credentials_ menu.
 
-![](image:images/009.png)
+![](images/009.png)
 
 We will use the value we entered in the ``ID`` field to Docker Login in the script file. Now, we define pipeline under _Jenkins Home Page -> New Item_ menu.
 
-![](image:images/010.png)
+![](images/010.png)
 
 In this step, we select ``GitHub hook trigger for GITScm pooling`` options for automatic run of the pipeline by ``Github hook`` call.
 
-![](image:images/011.png)
+![](images/011.png)
 
 Also in Pipeline section, we ``select Pipeline script from SCM`` as Definition, define GitHub repository and branch, and specify script location(_Jenkins file_).
 
-![](image:images/012.png)
+![](images/012.png)
 
 After that, when a push is done to the remote repository or when you manually trigger the pipeline by ``build now`` option, the steps described in Jenkins file will be executed.
+
+![](images/013.png)
 
 ## Review important points of the Jenkins file
 
