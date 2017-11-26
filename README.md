@@ -128,7 +128,7 @@ After entering the password, we will be download recommended plugins and define 
 
 ![](images/007.png)
 
-After clicking **Save and Finish** and **Start using Jenkins** buttons, we should be seeing the Jenkins homepage. One of the seven goals listed above is that we should be docker image building in dockerize Jenkins. Please look at the volume definitions for Jenkins in the compose file.
+After clicking **Save and Finish** and **Start using Jenkins** buttons, we should be seeing the Jenkins homepage. One of the seven goals listed above is that we must have the ability to build the image in dockerize Jenkins. Please look at the volume definitions for Jenkins in the compose file.
 ```
 - /var/run/docker.sock:/var/run/docker.sock
 ```
@@ -144,7 +144,7 @@ These definitions are performed under _Jenkins Home Page -> Credentials -> Globa
 
 ![](images/009.png)
 
-We will use the value we entered in the ``ID`` field to Docker Login in the script file. Now, we define pipeline under _Jenkins Home Page -> New Item_ menu.
+We use the value we entered in the ``ID`` field to Docker Login in the script file. Now, we define pipeline under _Jenkins Home Page -> New Item_ menu.
 
 ![](images/010.png)
 
