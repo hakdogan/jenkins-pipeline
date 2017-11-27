@@ -3,9 +3,9 @@
 
 # A tutorial about Continuous Integration and Continuous Delivery by Dockerize Jenkins Pipeline
 
-This repository is a tutorial on the automatically management of processes such as application build, test, deploy, getting a code quality report, docker image build, image push to the Docker Hub etc with Jenkins Pipeline which is run on a Docker container. Our goal is to ensure ``Continuous Integration`` and ``Continuous Delivery`` by triggering the pipeline after each push.
+This repository is a tutorial it tries to exemplify how to automatically manage the process of building, testing with the highest coverage, and deployment phases.
 
-That processes we want to auto-manage
+Our goal is to ensure our pipeline works well after each code being pushed. The processes we want to auto-manage:
 * Code checkout
 * Run tests
 * Compile the code
@@ -14,9 +14,9 @@ That processes we want to auto-manage
 * Push the image to Docker Hub
 * Pull and run the image
 
-## First step, run up containers
+## First step, running up the services
 
-Since one of the goals is to obtain the ``sonarqube`` report of our project, we should be able to access sonarqube from dockerize jenkins. For this reason, we will use ``docker compose``.
+Since one of the goals is to obtain the ``sonarqube`` report of our project, we should be able to access sonarqube from the jenkins service. ``Docker compose`` is a best choice to run services working together. We configure our application services in a yaml file as below.
 
 ``docker-compose.yml``
 ```yml
@@ -57,7 +57,7 @@ FROM sonarqube:6.7-alpine
 FROM jenkins:2.60.3
 ```
 
-If we run the following command in the same directory as the ``docker-compose.yml`` file, the Sonarqube and Jenkins containers will run up.
+If we run the following command in the same directory as the ``docker-compose.yml`` file, the Sonarqube and Jenkins containers will up and run.
 
 ```
 docker-compose -f docker-compose.yml up --build
@@ -72,19 +72,19 @@ f5bed5ba3266        pipeline_sonarqube   "./bin/run.sh"           About a minute
 ```
 
 ## GitHub configuration
-We'll define a service on Github to call the ``Jenkins Github`` webhook because we want to trigger the pipeline we will define whenever a push is made to our repository. To do this go to _Settings -> integrations & Services_. The ``Jenkins Github plugin`` should be shown on the list of available services as below.
+We’ll define a service on Github to call the ``Jenkins Github webhook`` because we want to trigger the pipeline. To do this go to _Settings -> Integrations & services._ The ``Jenkins Github plugin`` should be shown on the list of available services as below.
 
 ![](images/001.png)
 
-After this, we should be define our access URL of dockerize Jenkins container as **Jenkins URL** by adding ``/github-webhook/`` and add a new service.
+After this, we should add a new service by typing the URL of the dockerized Jenkins container along with the ``/github-webhook/`` path.
 
 ![](images/002.png)
 
-The next step is that create an ``SSH key`` for Jenkins user and define it as a ``Deploy keys`` on our GitHub repository.
+The next step is that create an ``SSH key`` for a Jenkins user and define it as ``Deploy keys`` on our GitHub repository.
 
 ![](images/003.png)
 
-When the steps are taken correctly, the following connection request should return a result like this.
+If everything goes well, the following connection request should return with a success.
 ```
 ssh git@github.com
 PTY allocation request failed on channel 0
@@ -94,11 +94,11 @@ Connection to github.com closed.
 
 ## Jenkins configuration
 
-We have configured Jenkins int the docker compose file to run on 8080 HTTP port therefore if we visit http://localhost:8080 we will be greeted by a screen like this.
+We have configured Jenkins in the docker compose file to run on port 8080 therefore if we visit http://localhost:8080 we will be greeted with a screen like this.
 
 ![](images/004.png)
 
-We need the admin password to proceed to installation. It's stored ``/var/jenkins_home/secrets/initialAdminPassword`` directory and also written as output on the console when Jenkins run up.
+We need the admin password to proceed to installation. It’s stored in the ``/var/jenkins_home/secrets/initialAdminPassword`` directory and also It’s written as output on the console when Jenkins starts.
 
 ```
 jenkins      | *************************************************************
@@ -120,7 +120,7 @@ docker exec -it jenkins sh
 / $ cat /var/jenkins_home/secrets/initialAdminPassword
 ```
 
-After entering the password, we will be download recommended plugins and define ``admin user``.
+After entering the password, we will download recommended plugins and define an ``admin user``.
 
 ![](images/005.png)
 
@@ -128,19 +128,18 @@ After entering the password, we will be download recommended plugins and define 
 
 ![](images/007.png)
 
-After clicking **Save and Finish** and **Start using Jenkins** buttons, we should be seeing the Jenkins homepage. One of the seven goals listed above is that we must have the ability to build the image in dockerize Jenkins. Please look at the volume definitions for Jenkins in the compose file.
+After clicking **Save and Finish** and **Start using Jenkins** buttons, we should be seeing the Jenkins homepage. One of the seven goals listed above is that we must have the ability to build an image in the Jenkins being dockerized. Take a look at the volume definitions of the Jenkins service in the compose file.
 ```
 - /var/run/docker.sock:/var/run/docker.sock
 ```
 
-The purpose here is to communicate between the ``Docker Daemon`` and the ``Docker Client``(_we will install it on the Jenkins_) over the socket. Like the docker client, we also need ``Maven`` to compile the application to be checked out. For the installation of these tools, we need to perform ``Maven`` and ``Docker Client`` installs under _Manage Jenkins -> Global Tool Configuration_ menu.
+The purpose is to communicate between the ``Docker Daemon`` and the ``Docker Client``(_we will install it on Jenkins_) over the socket. Like the docker client, we also need ``Maven`` to compile the application. For the installation of these tools, we need to perform the ``Maven`` and ``Docker Client`` configurations under _Manage Jenkins -> Global Tool Configuration_ menu.
 
 ![](images/008.png)
 
-We added Maven and Docker installer and checked ``Install automatically`` checkbox. These tools are installed by Jenkins when our script(_Jenkins file_) first runs. We give ``myMaven`` and ``myDocker`` names to the tools. We will access these tools with this names in the script file.
+We have added the ``Maven and Docker installers`` and have checked the ``Install automatically`` checkbox. These tools are installed by Jenkins when our script(Jenkins file) first runs. We give ``myMaven`` and ``myDocker`` names to the tools. We will access these tools with this names in the script file.
 
-Since we will perform some operations such as ``checkout`` and ``push image to Docker Hub`` on the script file, We need to define the ``Docker Hub Credentials`` and if _we are using a **private repo**, in addition, we must define ``Github credentials``.
-These definitions are performed under _Jenkins Home Page -> Credentials -> Global credentials (unrestricted) -> Add Credentials_ menu.
+Since we will perform some operations such as ``checkout codebase`` and ``pushing an image to Docker Hub``, we need to define the ``Docker Hub Credentials``. Keep in mind that if we are using a **private repo**, we must define ``Github credentials``. These definitions are performed under _Jenkins Home Page -> Credentials -> Global credentials (unrestricted) -> Add Credentials_ menu.
 
 ![](images/009.png)
 
@@ -152,11 +151,11 @@ In this step, we select ``GitHub hook trigger for GITScm pooling`` options for a
 
 ![](images/011.png)
 
-Also in Pipeline section, we ``select Pipeline script from SCM`` as Definition, define GitHub repository and branch, and specify script location(_Jenkins file_).
+Also in the Pipeline section, we select the ``Pipeline script from SCM`` as Definition, define the GitHub repository and the branch name, and specify the script location (_Jenkins file_).
 
 ![](images/012.png)
 
-After that, when a push is done to the remote repository or when you manually trigger the pipeline by ``build now`` option, the steps described in Jenkins file will be executed.
+After that, when a push is done to the remote repository or when you manually trigger the pipeline by ``Build Now`` option, the steps described in Jenkins file will be executed.
 
 ![](images/013.png)
 
@@ -180,7 +179,7 @@ stage('Push to Docker Registry'){
 }
 ```
 
-``withCredentials`` provided by ``Jenkins Credentials Binding Plugin`` and bind credentials to variables. We passed **dockerHubAccount** value with ``credentialsId`` parameter. Remember that, dockerHubAccount value is Docker Hub credentials ID we have defined it under _Jenkins Home Page -> Credentials -> Global credentials (unrestricted) -> Add Credentials_ menu. In this way, we access to username and password information of the account for login.
+``withCredentials`` provided by ``Jenkins Credentials Binding Plugin`` and bind credentials to variables. We passed **dockerHubAccount** value with ``credentialsId`` parameter. Remember that, dockerHubAccount value is Docker Hub credentials ID we have defined it under _Jenkins Home Page -> Credentials -> Global credentials (unrestricted) -> Add Credentials_ menu. In this way, we access to the username and password information of the account for login.
 
 ## Sonarqube configuration
 
@@ -201,4 +200,4 @@ For ``Sonarqube`` we have made the following definitions in the ``pom.xml`` file
 </dependencies>
 ```
 
-In the docker compose file, we gave the ``sonarqube`` name to the Sonarqube container, so in the pom.xml file the sonar URL was defined as http://sonarqube:9000.
+In the docker compose file, we gave the name of the Sonarqube service which is ``sonarqube``, this is why in the ``pom.xml`` file, the sonar URL was defined as http://sonarqube:9000.
