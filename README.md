@@ -1,5 +1,5 @@
 !["Docker Pulls](https://img.shields.io/docker/pulls/hakdogan/jenkins-pipeline.svg)
-[![Analytics](https://ga-beacon.appspot.com/UA-110069051-1/pipeline/readme)](https://github.com/igrigorik/ga-beacon)
+[![Analytics](https://ga-beacon.appspot.com/UA-110069051-1/jenkins-pipeline/readme)](https://github.com/igrigorik/ga-beacon)
 
 # A tutorial about Continuous Integration and Continuous Delivery by Dockerize Jenkins Pipeline
 
@@ -137,7 +137,7 @@ The purpose is to communicate between the ``Docker Daemon`` and the ``Docker Cli
 
 ![](images/008.png)
 
-We have added the ``Maven and Docker installers`` and have checked the ``Install automatically`` checkbox. These tools are installed by Jenkins when our script(Jenkins file) first runs. We give ``myMaven`` and ``myDocker`` names to the tools. We will access these tools with this names in the script file.
+We have added the ``Maven and Docker installers`` and have checked the ``Install automatically`` checkbox. These tools are installed by Jenkins when our script([Jenkins file](https://github.com/hakdogan/jenkins-pipeline/blob/master/Jenkinsfile)) first runs. We give ``myMaven`` and ``myDocker`` names to the tools. We will access these tools with this names in the script file.
 
 Since we will perform some operations such as ``checkout codebase`` and ``pushing an image to Docker Hub``, we need to define the ``Docker Hub Credentials``. Keep in mind that if we are using a **private repo**, we must define ``Github credentials``. These definitions are performed under _Jenkins Home Page -> Credentials -> Global credentials (unrestricted) -> Add Credentials_ menu.
 
@@ -151,7 +151,7 @@ In this step, we select ``GitHub hook trigger for GITScm pooling`` options for a
 
 ![](images/011.png)
 
-Also in the Pipeline section, we select the ``Pipeline script from SCM`` as Definition, define the GitHub repository and the branch name, and specify the script location (_Jenkins file_).
+Also in the Pipeline section, we select the ``Pipeline script from SCM`` as Definition, define the GitHub repository and the branch name, and specify the script location (_[Jenkins file](https://github.com/hakdogan/jenkins-pipeline/blob/master/Jenkinsfile)_).
 
 ![](images/012.png)
 
