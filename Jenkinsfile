@@ -1,14 +1,14 @@
-def CONTAINER_NAME="jenkins-pipeline"
+def CONTAINER_NAME="1stproject_virginia_repo"
 def CONTAINER_TAG="latest"
-def DOCKER_HUB_USER="hakdogan"
+def DOCKER_HUB_USER="bharathrajdumpala"
 def HTTP_PORT="8090"
 
 node {
 
     stage('Initialize'){
-        def dockerHome = tool 'myDocker'
-        def mavenHome  = tool 'myMaven'
-        env.PATH = "${dockerHome}/bin:${mavenHome}/bin:${env.PATH}"
+        //def dockerHome = tool 'myDocker'
+        //def mavenHome  = tool 'myMaven'
+        //env.PATH = "${dockerHome}/bin:${mavenHome}/bin:${env.PATH}"
     }
 
     stage('Checkout') {
@@ -19,13 +19,13 @@ node {
         sh "mvn clean install"
     }
 
-    stage('Sonar'){
+    /*stage('Sonar'){
         try {
             sh "mvn sonar:sonar"
         } catch(error){
             echo "The sonar server could not be reached ${error}"
         }
-     }
+     }*/
 
     stage("Image Prune"){
         imagePrune(CONTAINER_NAME)
